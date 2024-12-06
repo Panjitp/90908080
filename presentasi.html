@@ -157,6 +157,8 @@ function showVideo() {
     videos[currentVideo].style.display = 'block';
     videos[currentVideo].play();
   }
+
+videos.forEach((video) => video.load());
 // Tampilkan video pertama
 showVideo();
   </script>

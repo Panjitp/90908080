@@ -35,22 +35,17 @@
             const userLatitude = position.coords.latitude;  
             const userLongitude = position.coords.longitude;  
 
-            // Koordinat batas wilayah Kelurahan Tugu  
-            const tuguPolygon = [  
-                { lat: -6.346835819297786, lng: 106.85668460660116 },  
-                { lat: -6.345640620146447, lng: 106.85205175889854 },  
-                { lat: -6.355551959454524, lng: 106.84986640657442 },  
-                { lat: -6.351943389106576, lng: 106.83566328719004 },  
-                { lat: -6.358636888876283, lng: 106.83499083558935 },  
-                { lat: -6.369688481477022, lng: 106.83702691403496 },  
-                { lat: -6.373190697103012, lng: 106.83953285673728 },  
-                { lat: -6.372957216805014, lng: 106.86247789460533 },  
-                { lat: -6.3529553438636, lng: 106.85973701977468 },  
-                { lat: -6.346835819297786, lng: 106.85668460660116 } // Kembali ke titik awal  
-            ];  
+            // Koordinat untuk Kelurahan Tugu, Kecamatan Cimanggis  
+            const tuguLocation = {  
+                latitude: -6.362840619050003, // Latitude Tugu  
+                longitude: 106.84954649461986 // Longitude Tugu  
+            };  
 
-            // Periksa apakah pengguna berada di dalam poligon  
-            if (isPointInPolygon(userLatitude, userLongitude, tuguPolygon)) {  
+            // Hitung jarak  
+            const distance = getDistanceFromLatLonInKm(userLatitude, userLongitude, tuguLocation.latitude, tuguLocation.longitude);  
+            const radius = 2; // Radius dalam kilometer  
+
+            if (distance <= radius) {  
                 document.getElementById('result').innerText = "Anda berada di Kelurahan Tugu, Kecamatan Cimanggis.";  
             } else {  
                 document.getElementById('result').innerText = "Anda tidak berada di Kelurahan Tugu, Kecamatan Cimanggis.";  
@@ -61,18 +56,22 @@
             document.getElementById('result').innerText = "Tidak dapat mengakses lokasi Anda.";  
         }  
 
-        // Fungsi untuk memeriksa apakah titik berada di dalam poligon  
-        function isPointInPolygon(lat, lng, polygon) {  
-            let inside = false;  
-            for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {  
-                const xi = polygon[i].lat, yi = polygon[i].lng;  
-                const xj = polygon[j].lat, yj = polygon[j].lng;  
+        // Fungsi untuk menghitung jarak antara dua koordinat  
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {  
+            const R = 6371; // Radius bumi dalam kilometer  
+            const dLat = deg2rad(lat2 - lat1);  
+            const dLon = deg2rad(lon2 - lon1);  
+            const a =   
+                Math.sin(dLat/2) * Math.sin(dLat/2) +  
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *   
+                Math.sin(dLon/2) * Math.sin(dLon/2);   
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));   
+            const distance = R * c; // Jarak dalam kilometer  
+            return distance;  
+        }  
 
-                const intersect = ((yi > lng) !== (yj > lng)) &&  
-                    (xj < (xi - xj) * (lng - yi) / (yj - yi) + xi);  
-                if (intersect) inside = !inside;  
-            }  
-            return inside;  
+        function deg2rad(deg) {  
+            return deg * (Math.PI/180);  
         }  
     </script>  
 </body>  

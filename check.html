@@ -1,0 +1,47 @@
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Cek Lokasi Pengguna</title>  
+    <style>  
+        body {  
+            font-family: Arial, sans-serif;  
+            background-color: #f4f4f4;  
+            padding: 20px;  
+        }  
+        .result {  
+            margin-top: 20px;  
+            font-size: 20px;  
+            font-weight: bold;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <h1>Cek Lokasi Pengguna</h1>  
+    <button id="checkLocation">Cek Lokasi</button>  
+    <div class="result" id="result"></div>  
+
+    <script>  
+        document.getElementById('checkLocation').addEventListener('click', function() {  
+            if (navigator.geolocation) {  
+                navigator.geolocation.getCurrentPosition(success, error);  
+            } else {  
+                document.getElementById('result').innerText = "Geolocation tidak didukung oleh browser ini.";  
+            }  
+        });  
+
+        function success(position) {  
+            const latitude = position.coords.latitude;  
+            const longitude = position.coords.longitude;  
+
+            // Tampilkan koordinat  
+            document.getElementById('result').innerText = `Koordinat Anda: Latitude: ${latitude}, Longitude: ${longitude}`;  
+        }  
+
+        function error() {  
+            document.getElementById('result').innerText = "Tidak dapat mengakses lokasi Anda.";  
+        }  
+    </script>  
+</body>  
+</html>
